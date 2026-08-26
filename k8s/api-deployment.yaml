@@ -17,8 +17,27 @@ spec:
         - name: finpay-api
           image: finpay-devops-lab-api:latest
           imagePullPolicy: Never
-          env:
-            - name: DATABASE_URL
-              value: "postgresql://finpay_user:finpay_pass123@postgres:5432/finpay_db"
+          envFrom:
+            - secretRef:
+                name: api-secret
           ports:
             - containerPort: 8000
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "250m"
+              memory: "256Mi"
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 15
+            periodSeconds: 20
