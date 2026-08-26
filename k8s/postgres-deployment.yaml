@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  namespace: finpay
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:16
+          env:
+            - name: POSTGRES_USER
+              value: "finpay_user"
+            - name: POSTGRES_PASSWORD
+              value: "finpay_pass123"
+            - name: POSTGRES_DB
+              value: "finpay_db"
+          ports:
+            - containerPort: 5432
